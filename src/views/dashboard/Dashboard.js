@@ -89,11 +89,16 @@ const Dashboard = () => {
   const [formValues, setFormValues] = React.useState({
     itemName: '',
     quantity: '',
+    originalQuantity: '',
     location: '',
     description: '',
     categoryId: '',
   })
   const [selectedFile, setSelectedFile] = React.useState(null)
+
+  const sortedItems = React.useMemo(() => {
+    return [...items].sort((a, b) => Number(b.itemId ?? 0) - Number(a.itemId ?? 0))
+  }, [items])
 
   React.useEffect(() => {
     let isMounted = true
@@ -189,6 +194,7 @@ const Dashboard = () => {
     setFormValues({
       itemName: item.itemName || '',
       quantity: String(item.quantity ?? ''),
+      originalQuantity: String(item.originalQuantity ?? ''),
       location: item.location || '',
       description: item.description || '',
       categoryId: item.categoryId || '',
@@ -205,6 +211,7 @@ const Dashboard = () => {
     setFormValues({
       itemName: '',
       quantity: '',
+      originalQuantity: '',
       location: '',
       description: '',
       categoryId: '',
@@ -229,6 +236,7 @@ const Dashboard = () => {
       const formData = new FormData()
       formData.append('itemName', formValues.itemName)
       formData.append('quantity', formValues.quantity)
+      formData.append('originalQuantity', formValues.originalQuantity)
       formData.append('location', formValues.location)
       formData.append('description', formValues.description)
       formData.append('categoryId', formValues.categoryId)
@@ -262,6 +270,7 @@ const Dashboard = () => {
           setFormValues({
             itemName: '',
             quantity: '',
+            originalQuantity: '',
             location: '',
             description: '',
             categoryId: '',
@@ -291,7 +300,7 @@ const Dashboard = () => {
       formData.append('ItemId', selectedItem.itemId)
       formData.append('ItemName', formValues.itemName)
       formData.append('Quantity', formValues.quantity)
-      formData.append('OriginalQuantity', selectedItem.originalQuantity)
+      formData.append('OriginalQuantity', formValues.originalQuantity)
       formData.append('Location', formValues.location)
       formData.append('Description', formValues.description)
       formData.append('CategoryId', formValues.categoryId)
@@ -405,6 +414,7 @@ const Dashboard = () => {
                 <CTableHead className="text-nowrap">
                   <CTableRow>
                     <CTableHeaderCell className="bg-body-tertiary">Name</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Original Quantity</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">Qty</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary text-center">Place</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">Description</CTableHeaderCell>
@@ -414,10 +424,13 @@ const Dashboard = () => {
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {items.map((item) => (
+                  {sortedItems.map((item) => (
                     <CTableRow key={item.itemId}>
                       <CTableDataCell>
                         <div>{item.itemName}</div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <div>{item.originalQuantity}</div>
                       </CTableDataCell>
                       <CTableDataCell>
                         <div>{item.quantity}</div>
@@ -523,6 +536,17 @@ const Dashboard = () => {
                     />
                   </div>
                   <div className="mb-3">
+                    <CFormLabel htmlFor="originalQuantity">Original Quantity</CFormLabel>
+                    <CFormInput
+                      id="originalQuantity"
+                      name="originalQuantity"
+                      type="number"
+                      min="0"
+                      value={formValues.originalQuantity}
+                      onChange={handleFormChange}
+                    />
+                  </div>
+                  <div className="mb-3">
                     <CFormLabel htmlFor="quantity">Quantity</CFormLabel>
                     <CFormInput
                       id="quantity"
@@ -533,6 +557,7 @@ const Dashboard = () => {
                       onChange={handleFormChange}
                     />
                   </div>
+              
                   <div className="mb-3">
                     <CFormLabel htmlFor="location">Place</CFormLabel>
                     <CFormInput
@@ -606,6 +631,17 @@ const Dashboard = () => {
                     />
                   </div>
                   <div className="mb-3">
+                    <CFormLabel htmlFor="originalQuantity">Original Quantity</CFormLabel>
+                    <CFormInput
+                      id="originalQuantity"
+                      name="originalQuantity"
+                      type="number"
+                      min="0"
+                      value={formValues.originalQuantity}
+                      onChange={handleFormChange}
+                    />
+                  </div>
+                  <div className="mb-3">
                     <CFormLabel htmlFor="quantity">Quantity</CFormLabel>
                     <CFormInput
                       id="quantity"
@@ -616,6 +652,7 @@ const Dashboard = () => {
                       onChange={handleFormChange}
                     />
                   </div>
+                  
                   <div className="mb-3">
                     <CFormLabel htmlFor="location">Place</CFormLabel>
                     <CFormInput

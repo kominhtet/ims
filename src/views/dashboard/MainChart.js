@@ -9,6 +9,7 @@ const MainChart = () => {
   const chartRef = useRef(null)
   const [labels, setLabels] = useState([])
   const [values, setValues] = useState([])
+  const [originalValues, setOriginalValues] = useState([])
   const [categoryLabels, setCategoryLabels] = useState([])
   const [categoryCounts, setCategoryCounts] = useState([])
 
@@ -50,6 +51,7 @@ const MainChart = () => {
         // Set bar chart data (items)
         setLabels(items.map((i) => i.itemName))
         setValues(items.map((i) => i.quantity))
+        setOriginalValues(items.map((i) => i.originalQuantity))
 
         // Set pie chart data (categories with item counts)
         setCategoryLabels(categories.map((cat) => cat.categoryName))
@@ -81,13 +83,24 @@ const MainChart = () => {
                   borderWidth: 1,
                   data: values,
                 },
+                {
+                  label: 'Original Quantity',
+                  backgroundColor: `rgba(${getStyle('--cui-primary-rgb')}, .4)`,
+                  borderColor: getStyle('--cui-primary'),
+                  borderWidth: 1,
+                  data: originalValues,
+                },
               ],
             }}
             options={{
               maintainAspectRatio: false,
               plugins: {
                 legend: {
-                  display: false,
+                  display: true,
+                  position: 'top',
+                  labels: {
+                    color: getStyle('--cui-body-color'),
+                  },
                 },
               },
               scales: {
